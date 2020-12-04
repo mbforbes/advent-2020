@@ -10,8 +10,12 @@ import IPython
 from mbforbes_python_utils import read
 
 
+def get_lines(path: str) -> List[str]:
+    return [l.strip() for l in read(path).split("\n")]
+
+
 def day_1_1() -> None:
-    nums = [int(x) for x in read("data/day_1.txt").split("\n")]
+    nums = [int(x) for x in get_lines("data/day_1.txt")]
     for i in nums:
         for j in nums:
             if i + j == 2020:
@@ -20,7 +24,7 @@ def day_1_1() -> None:
 
 
 def day_1_2() -> None:
-    nums = [int(x) for x in read("data/day_1.txt").split("\n")]
+    nums = [int(x) for x in get_lines("data/day_1.txt")]
     for i in nums:
         for j in nums:
             for k in nums:
@@ -34,14 +38,12 @@ def day_2_1() -> None:
     10-15 w: wmwlwwwwfgwwjrzwwwww
     """
     n_valid = 0
-    for line in [l.strip() for l in read("data/day_2.txt").split("\n")]:
+    for line in get_lines("data/day_2.txt"):
         chunks = line.split(" ")
         min_, max_ = [int(x) for x in chunks[0].split("-")]
         letter = chunks[1][0]
         pwd = chunks[2]
-        cnt: typing.Counter[str] = Counter(pwd)
-        if cnt[letter] >= min_ and cnt[letter] <= max_:
-            n_valid += 1
+        n_valid += 1 if Counter(pwd)[letter] in range(min_, max_ + 1) else 0
     print(n_valid)
 
 
@@ -52,13 +54,8 @@ def day_2_2() -> None:
         pos1, pos2 = [int(x) for x in chunks[0].split("-")]
         letter = chunks[1][0]
         pwd = chunks[2]
-        if sum([pwd[pos1 - 1] == letter, pwd[pos2 - 1] == letter]) == 1:
-            n_valid += 1
+        n_valid += 1 if sum([pwd[pos1 - 1] == letter, pwd[pos2 - 1] == letter]) == 1 else 0
     print(n_valid)
-
-
-def get_lines(path: str) -> List[str]:
-    return [l.strip() for l in read(path).split("\n")]
 
 
 def day_3_1() -> None:
@@ -121,9 +118,8 @@ def day_4_1() -> None:
     hcl:#602927 iyr:2018 byr:1938 ecl:blu
     """
     n_valid = 0
-    ppl = read("data/day_4.txt").split("\n\n")
     req_fields = {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}
-    for person in ppl:
+    for person in read("data/day_4.txt").split("\n\n"):
         keys = set([x.split(":")[0] for x in person.replace("\n", " ").split(" ")])
         n_valid += 1 if keys.issuperset(req_fields) else 0
     print(n_valid)
@@ -148,8 +144,7 @@ def day_4_2() -> None:
     }
 
     n_valid = 0
-    ppl = read("data/day_4.txt").split("\n\n")
-    for person in ppl:
+    for person in read("data/day_4.txt").split("\n\n"):
         data = {x.split(":")[0]: x.split(":")[1] for x in person.replace("\n", " ").split(" ")}
         if not set(data.keys()).issuperset(req_fields):
             continue
