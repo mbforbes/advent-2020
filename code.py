@@ -154,6 +154,37 @@ def day_4_2() -> None:
     print(n_valid)
 
 
+def bsp(lowers: List[bool]) -> int:
+    """Binary space partitioning. Each input is whether we use lower."""
+    low, high = 0, 2 ** len(lowers) - 1
+    for l in lowers:
+        delta = math.ceil((high - low) / 2)
+        if l:
+            high -= delta
+        else:
+            low += delta
+    assert low == high
+    return low
+
+
+def seat(code: str) -> int:
+    row = bsp([c == "F" for c in list(code)[:7]])
+    col = bsp([c == "L" for c in list(code)[7:]])
+    return row * 8 + col
+
+
+def day_5_1() -> None:
+    """BFFFBFBLRR"""
+    print(max([seat(l) for l in get_lines("data/day_5.txt")]))
+
+
+def day_5_2() -> None:
+    seats = set([seat(l) for l in get_lines("data/day_5.txt")])
+    for i in range(min(seats) + 1, max(seats)):
+        if i not in seats:
+            print(i)
+
+
 def main() -> None:
     # day_1_1()
     # day_1_2()
@@ -162,7 +193,9 @@ def main() -> None:
     # day_3_1()
     # day_3_2()
     # day_4_1()
-    day_4_2()
+    # day_4_2()
+    # day_5_1()
+    day_5_2()
 
 
 if __name__ == "__main__":
