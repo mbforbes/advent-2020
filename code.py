@@ -3,6 +3,7 @@
 from collections import Counter
 import math
 import re
+import string
 import typing
 from typing import List, Tuple, Set, Dict, Any, Optional, NamedTuple, Iterator, Union
 
@@ -185,6 +186,20 @@ def day_5_2() -> None:
             print(i)
 
 
+def day_6_1() -> None:
+    print(sum(len(set(x.replace("\n", ""))) for x in read("data/day_6.txt").split("\n\n")))
+
+
+def day_6_2() -> None:
+    cnt = 0
+    for group in read("data/day_6.txt").split("\n\n"):
+        yes = set(string.ascii_lowercase)
+        for person in group.split("\n"):
+            yes &= set(person)
+        cnt += len(yes)
+    print(cnt)
+
+
 def main() -> None:
     # day_1_1()
     # day_1_2()
@@ -195,7 +210,9 @@ def main() -> None:
     # day_4_1()
     # day_4_2()
     # day_5_1()
-    day_5_2()
+    # day_5_2()
+    # day_6_1()
+    day_6_2()
 
 
 if __name__ == "__main__":
