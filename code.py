@@ -1,6 +1,7 @@
 """https://adventofcode.com/2020/"""
 
 from collections import Counter
+from itertools import product
 import math
 import re
 import string
@@ -16,22 +17,13 @@ def get_lines(path: str) -> List[str]:
 
 
 def day_1_1() -> None:
-    nums = [int(x) for x in get_lines("data/day_1.txt")]
-    for i in nums:
-        for j in nums:
-            if i + j == 2020:
-                print(i * j)
-                return
+    ns = [int(l) for l in get_lines("data/day_1.txt")]
+    print([i * j for i, j in product(ns, ns) if i + j == 2020][0])
 
 
 def day_1_2() -> None:
-    nums = [int(x) for x in get_lines("data/day_1.txt")]
-    for i in nums:
-        for j in nums:
-            for k in nums:
-                if i + j + k == 2020:
-                    print(i * j * k)
-                    return
+    ns = [int(l) for l in get_lines("data/day_1.txt")]
+    print([i * j * k for i, j, k in product(ns, ns, ns) if i + j + k == 2020][0])
 
 
 def day_2_1() -> None:
@@ -111,12 +103,14 @@ def day_4_1() -> None:
 
     hcl:#602927 iyr:2018 byr:1938 ecl:blu
     """
-    n_valid = 0
-    req_fields = {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}
-    for person in read("data/day_4.txt").split("\n\n"):
-        keys = set([x.split(":")[0] for x in person.replace("\n", " ").split(" ")])
-        n_valid += 1 if keys.issuperset(req_fields) else 0
-    print(n_valid)
+    print(
+        sum(
+            set([x.split(":")[0] for x in person.split()]).issuperset(
+                {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"}
+            )
+            for person in open("data/day_4.txt").read().split("\n\n")
+        )
+    )
 
 
 def day_4_2() -> None:
