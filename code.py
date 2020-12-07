@@ -200,6 +200,43 @@ def day_6_2() -> None:
     print(cnt)
 
 
+BagTree = Dict[str, Dict[str, int]]
+
+
+def build_bag_tree() -> BagTree:
+    d = {}
+    for line in get_lines("data/day_7.txt"):
+        chunks = line.split(" bags contain ")
+        x = chunks[0]
+        ys = chunks[1][:-1]
+        ld = {}
+        if ys != "no other bags":
+            for y_phrase in ys.split(", "):
+                n = int(y_phrase.split(" ")[0])
+                y = " ".join(y_phrase.split(" ")[1:-1])
+                ld[y] = n
+        d[x] = ld
+    return d
+
+
+def day_7_1() -> None:
+    """light olive bags contain 2 posh magenta bags, 4 dim crimson bags."""
+
+    def check_bags(d: BagTree, key: str) -> bool:
+        return "shiny gold" in d[key] or any(check_bags(d, k) for k in d[key].keys())
+
+    d = build_bag_tree()
+    print(sum(check_bags(d, k) for k in d.keys()))
+
+
+def day_7_2() -> None:
+    def sum_bags(d: BagTree, key: str) -> int:
+        return sum(n * (1 + sum_bags(d, k)) for k, n in d[key].items())
+
+    d = build_bag_tree()
+    print(sum_bags(d, "shiny gold"))
+
+
 def main() -> None:
     # day_1_1()
     # day_1_2()
@@ -212,7 +249,9 @@ def main() -> None:
     # day_5_1()
     # day_5_2()
     # day_6_1()
-    day_6_2()
+    # day_6_2()
+    # day_7_1()
+    day_7_2()
 
 
 if __name__ == "__main__":
