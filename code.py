@@ -50,29 +50,13 @@ def day_2_1() -> None:
 
 def day_2_2() -> None:
     n_valid = 0
-    for line in [l.strip() for l in read("data/day_2.txt").split("\n")]:
+    for line in get_lines("data/day_2.txt"):
         chunks = line.split(" ")
         pos1, pos2 = [int(x) for x in chunks[0].split("-")]
         letter = chunks[1][0]
         pwd = chunks[2]
         n_valid += 1 if sum([pwd[pos1 - 1] == letter, pwd[pos2 - 1] == letter]) == 1 else 0
     print(n_valid)
-
-
-def day_3_1() -> None:
-    """
-    ..##.......
-    #...#...#..
-    .#....#..#.
-    """
-    n_trees = 0
-    global_x = 0
-    for line in get_lines("data/day_3.txt"):
-        local_x = global_x % len(line)
-        if line[local_x] == "#":
-            n_trees += 1
-        global_x += 3
-    print(n_trees)
 
 
 def check_slope(slope: List[str], right: int, skip: bool) -> int:
@@ -90,6 +74,15 @@ def check_slope(slope: List[str], right: int, skip: bool) -> int:
         global_x += right
         skip_next = skip and (not skip_next)
     return n_trees
+
+
+def day_3_1() -> None:
+    """
+    ..##.......
+    #...#...#..
+    .#....#..#.
+    """
+    print(check_slope(get_lines("data/day_3.txt"), 3, False))
 
 
 def day_3_2() -> None:
