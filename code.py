@@ -10,6 +10,7 @@ from typing import List, Tuple, Set, Dict, Any, Optional, NamedTuple, Iterator, 
 
 import IPython
 from mbforbes_python_utils import read
+from tqdm import tqdm
 
 
 def get_lines(path: str) -> List[str]:
@@ -224,6 +225,69 @@ def day_7_2() -> None:
     print(sum_bags(d, "shiny gold"))
 
 
+def day_8_1() -> None:
+    """nop +0"""
+    lines = get_lines("data/day_8.txt")
+    ran, pos, val = set(), 0, 0
+    while True:
+        if pos in ran:
+            break
+        ran.add(pos)
+
+        instr, s_arg = lines[pos].split(" ")
+        arg = int(s_arg)
+        if instr == "acc":
+            val += arg
+            pos += 1
+        elif instr == "jmp":
+            pos += arg
+        else:
+            assert instr == "nop"
+            pos += 1
+    print(val)
+
+
+def check_boot(lines) -> Tuple[bool, int]:
+    """Returns (success, accumulator value)"""
+    ran, pos, val = set(), 0, 0
+    while True:
+        if pos == len(lines):
+            return True, val
+        if pos in ran:
+            break
+        ran.add(pos)
+
+        instr, s_arg = lines[pos].split(" ")
+        arg = int(s_arg)
+        if instr == "acc":
+            val += arg
+            pos += 1
+        elif instr == "jmp":
+            pos += arg
+        else:
+            assert instr == "nop"
+            pos += 1
+    return False, val
+
+
+def day_8_2() -> None:
+    # brute force baybayyyy
+    orig_lines = get_lines("data/day_8.txt")
+    for i, line in enumerate(orig_lines):
+        instr, s_arg = line.split(" ")
+        if instr == "acc":
+            continue
+        elif instr == "jmp":
+            suc, val = check_boot(orig_lines[:i] + [" ".join(["nop", s_arg])] + orig_lines[i + 1 :])
+        else:
+            assert instr == "nop"
+            suc, val = check_boot(orig_lines[:i] + [" ".join(["jmp", s_arg])] + orig_lines[i + 1 :])
+        if suc:
+            print(val)
+            return
+    print("no solution found :-(")
+
+
 def main() -> None:
     # day_1_1()
     # day_1_2()
@@ -238,7 +302,9 @@ def main() -> None:
     # day_6_1()
     # day_6_2()
     # day_7_1()
-    day_7_2()
+    # day_7_2()
+    # day_8_1()
+    day_8_2()
 
 
 if __name__ == "__main__":
