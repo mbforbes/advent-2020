@@ -225,28 +225,6 @@ def day_7_2() -> None:
     print(sum_bags(d, "shiny gold"))
 
 
-def day_8_1() -> None:
-    """nop +0"""
-    lines = get_lines("data/day_8.txt")
-    ran, pos, val = set(), 0, 0
-    while True:
-        if pos in ran:
-            break
-        ran.add(pos)
-
-        instr, s_arg = lines[pos].split(" ")
-        arg = int(s_arg)
-        if instr == "acc":
-            val += arg
-            pos += 1
-        elif instr == "jmp":
-            pos += arg
-        else:
-            assert instr == "nop"
-            pos += 1
-    print(val)
-
-
 def check_boot(lines) -> Tuple[bool, int]:
     """Returns (success, accumulator value)"""
     ran, pos, val = set(), 0, 0
@@ -268,6 +246,11 @@ def check_boot(lines) -> Tuple[bool, int]:
             assert instr == "nop"
             pos += 1
     return False, val
+
+
+def day_8_1() -> None:
+    """nop +0"""
+    print(check_boot(get_lines("data/day_8.txt"))[1])
 
 
 def day_8_2() -> None:
